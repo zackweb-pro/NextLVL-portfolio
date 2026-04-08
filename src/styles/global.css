@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg:         #f4f1ec;
+  --fg:         #111111;
+  --fg-muted:   rgba(17,17,17,0.5);
+  --fg-dim:     rgba(17,17,17,0.28);
+  --surface:    #111111;
+  --surface-fg: #f4f1ec;
+  --border:     rgba(17,17,17,0.12);
+  --border-md:  rgba(17,17,17,0.22);
+  --stroke:     #111111;
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-serif:   'Cormorant Garamond', serif;
+  --font-mono:    'Space Mono', monospace;
+}
+
+[data-theme="dark"] {
+  --bg:         #0d0d0d;
+  --fg:         #f0ede8;
+  --fg-muted:   rgba(240,237,232,0.5);
+  --fg-dim:     rgba(240,237,232,0.25);
+  --surface:    #f0ede8;
+  --surface-fg: #111111;
+  --border:     rgba(240,237,232,0.1);
+  --border-md:  rgba(240,237,232,0.2);
+  --stroke:     #f0ede8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.4s, color 0.4s;
+}
+
+button { cursor: pointer; }
+a { text-decoration: none; color: inherit; }
+img { display: block; user-select: none; -webkit-user-drag: none; }
+
