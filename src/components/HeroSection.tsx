@@ -257,6 +257,71 @@ function HamburgerMenu({ theme, toggleTheme }) {
 export default function HeroSection({ theme, toggleTheme }) {
   const heroRef  = useRef(null);
   const iconRefs = useRef([]);
+  const [projectFilter, setProjectFilter] = useState('All work');
+  const [projectComplete, setProjectComplete] = useState(false);
+  const projectsShellRef = useRef(null);
+  const projectTrackRef = useRef(null);
+  const [projectOffset, setProjectOffset] = useState(0);
+
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('.reveal-on-scroll');
+    if (!('IntersectionObserver' in window)) {
+      revealItems.forEach(item => item.classList.add('is-visible'));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+    revealItems.forEach(item => observer.observe(item));
+    return () => observer.disconnect();
+  }, [projectFilter]);
+
+  useEffect(() => {
+    let frame = 0;
+    const updateProjectRail = () => {
+      const shell = projectsShellRef.current;
+      const track = projectTrackRef.current;
+      if (!shell || !track) return;
+      const bounds = shell.getBoundingClientRect();
+      const section = track.parentElement;
+      const sectionStyles = section ? getComputedStyle(section) : null;
+      const sidePadding = sectionStyles
+        ? parseFloat(sectionStyles.paddingLeft) + parseFloat(sectionStyles.paddingRight)
+        : 96;
+      const visibleRailWidth = Math.max(1, shell.clientWidth - sidePadding);
+      // Use the real final card edge rather than the rail's trailing padding.
+      // This guarantees Project 08 itself is fully inside the viewport.
+      const lastCard = track.lastElementChild as HTMLElement | null;
+      const trackRect = track.getBoundingClientRect();
+      const lastCardRect = lastCard?.getBoundingClientRect();
+      const lastCardEnd = lastCardRect
+        ? lastCardRect.right - trackRect.left
+        : track.scrollWidth;
+      // Add the remaining end travel so the final card can fully enter the
+      // viewport before the next panel takes over.
+      const maxOffset = Math.max(0, lastCardEnd - visibleRailWidth + 524);
+      const progress = Math.min(1, Math.max(0, -bounds.top / Math.max(maxOffset, 1)));
+      setProjectComplete(progress >= 0.999);
+      setProjectOffset(progress * maxOffset);
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(updateProjectRail);
+    };
+    updateProjectRail();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [projectFilter]);
 
   /* Mouse parallax on tech icons */
   useEffect(() => {
@@ -284,7 +349,7 @@ export default function HeroSection({ theme, toggleTheme }) {
       <HamburgerMenu theme={theme} toggleTheme={toggleTheme} />
 
       {/* ══ HERO SECTION ══════════════════════════════════ */}
-      <section className="hero" id="home" ref={heroRef}>
+      <section className="hero stack-hero" id="home" ref={heroRef}>
 
         {/* Full-bleed photo as background */}
         <div className="hero-photo-bg">
@@ -339,7 +404,7 @@ export default function HeroSection({ theme, toggleTheme }) {
             </h1>
             <p className="tb-desc">
               Full-stack developer crafting elegant solutions.<br/>
-              Currently open to internships and collaborations.
+              Currently open to work and freelancing.
             </p>
           </div>
           <div className="tb-ctas">
@@ -377,39 +442,71 @@ export default function HeroSection({ theme, toggleTheme }) {
       </section>
 
       {/* ══ PROJECTS ══════════════════════════════════════ */}
-      <section className="section" id="projects">
-        <div className="sec-head">
-          <span className="sec-tag">/ Selected Work</span>
-          <h2 className="sec-title">What I've <em>Built</em></h2>
+      <div className="projects-scroll-shell" id="projects" ref={projectsShellRef}>
+      <section className="section stack-section projects-section">
+        <div className="sec-head projects-head reveal-on-scroll">
+          <div>
+            <span className="sec-tag">/ Selected work · 2024—25</span>
+            <h2 className="sec-title">Built by <em>Zackweb</em></h2>
+          </div>
+          <p className="projects-intro">A selection of digital products, experiments and systems we shaped from first sketch to final release.</p>
         </div>
-        <div className="proj-grid">
+        <div className="project-filters reveal-on-scroll" role="tablist" aria-label="Project filters">
+          {['All work', 'Product', 'Systems', 'Experiments'].map(filter => (
+            <button key={filter} className={`filter-btn ${projectFilter === filter ? 'is-active' : ''}`} type="button" onClick={() => { setProjectFilter(filter); setProjectComplete(false); }}>
+              {filter} <span>{filter === 'All work' ? '08' : filter === 'Product' ? '03' : filter === 'Systems' ? '02' : '03'}</span>
+            </button>
+          ))}
+          <a href="#contact" className="all-work-link">Start a project <ArrowRight size={15} /></a>
+        </div>
+        <div className="proj-grid project-rail" ref={projectTrackRef} style={{ transform: `translate3d(-${projectOffset}px, 0, 0)` }}>
           {[
-            { n:'01', title:'E-Commerce Platform',  tag:'Full Stack', stack:['React','Node.js','PostgreSQL'],
-              desc:'Full-stack marketplace with real-time inventory, payment integration and admin dashboard.' },
-            { n:'02', title:'Task Management API',  tag:'Backend',    stack:['Spring Boot','Java','PostgreSQL'],
-              desc:'RESTful microservice architecture with JWT auth, role-based access and real-time notifications.' },
-            { n:'03', title:'Developer Portfolio',  tag:'Frontend',   stack:['React','CSS'],
-              desc:'This very site — editorial design, smooth animations, and a terminal you can actually type in.' },
-          ].map(p => (
-            <div key={p.n} className="proj-card">
-              <div className="pc-top">
-                <span className="pc-num">{p.n}</span>
-                <span className="pc-tag">{p.tag}</span>
+            { n:'01', category:'Product', title:'OurBusWay', tag:'Platform · Full stack', type:'nova', image:'/assets/projects/ourbusway.png', stack:['Spring Boot','Spring Cloud','RabbitMQ'],
+              desc:'Urban transportation digitalization platform with ticketing, subscriptions, live bus tracking, incidents and role-based dashboards.' },
+            { n:'02', category:'Systems', title:'ENSIAS Department Management', tag:'Systems · Microservices', type:'atlas', image:'/assets/projects/dep_manage.png', stack:['Spring Boot','React.js','Docker'],
+              desc:'A polished web application for managing ENSIAS departments, built with microservices and a more expressive interface.' },
+            { n:'03', category:'Product', title:'SOMAP / Employee Records', tag:'Product · Internship', type:'nova', image:'/assets/projects/dashboardsomap.png', stack:['React.js','Node.js','MySQL'],
+              desc:'Employee records and purchase-request management with dedicated administrator and responsible-user roles.' },
+            { n:'04', category:'Product', title:'Internship Applications', tag:'Platform · Student', type:'nova', image:'/assets/projects/searchstage.png', stack:['React.js','Node.js','Oracle DB'],
+              desc:'A platform connecting students and recruiters for internship applications, backed by Oracle DB on OCI.' },
+            { n:'05', category:'Experiments', title:'ENSIAS Chatbot', tag:'Bot · Information retrieval', type:'zackweb', image:'/assets/projects/chatbot_ensias.png', stack:['Python','Flask','NeuralIntents'],
+              desc:'An information-retrieval chatbot for ENSIAS built with Python, Flask and NeuralIntents.' },
+            { n:'06', category:'Experiments', title:'Form Saver Pro', tag:'Extension · Utility', type:'atlas', image:'/assets/projects/FormSaver%20Pro.png', stack:['JavaScript','Chrome Extension','Local Storage'],
+              desc:'A Chrome extension that keeps form inputs available after a page reload.' },
+            { n:'07', category:'Systems', title:'Platform / Service Core', tag:'Systems · Backend', type:'atlas', image:'/assets/projects/plateform.png', stack:['Java','PostgreSQL','Docker'],
+              desc:'A service foundation focused on dependable data, clear operations and scalable delivery.' },
+            { n:'08', category:'Experiments', title:'Portfolio / Zackweb', tag:'Experiment · Identity', type:'zackweb', image:'/assets/projects/portfolio-image.jpeg', stack:['React','Motion','Brand system'],
+              desc:'The evolving visual identity and portfolio system behind Zackweb and the team’s digital work.' },
+          ].filter(p => projectFilter === 'All work' || p.category === projectFilter).map((p, index) => (
+            <article key={p.n} className={`proj-card reveal-on-scroll delay-${index + 1}`}>
+              <div className={`project-art art-${p.type}`} aria-hidden="true">
+                {p.image && <img className="project-art-image" src={p.image} alt="" loading="lazy" />}
+                <div className="art-browser"><i /><i /><i /><span>{p.title.split(' / ')[0].toLowerCase()}.studio</span></div>
+                <div className="art-content">
+                  {p.type === 'nova' && <><small>Good design, made useful.</small><strong>Find your<br/><em>everyday.</em></strong><div className="art-product" /></>}
+                  {p.type === 'atlas' && <><small>MONDAY / 09:41</small><strong>Make space<br/>for progress.</strong><div className="art-chart"><b /><b /><b /><b /><b /></div></>}
+                  {p.type === 'zackweb' && <><small>SELECTED PRACTICE</small><strong>Ideas into<br/><em>interfaces.</em></strong><div className="art-orbit" /></>}
+                </div>
+                <span className="art-index">{p.n} / 08</span>
               </div>
-              <h3 className="pc-title">{p.title}</h3>
-              <p  className="pc-desc">{p.desc}</p>
-              <div className="pc-stack">
-                {p.stack.map(s => <span key={s} className="pc-chip">{s}</span>)}
+              <div className="pc-body">
+                <div className="pc-top">
+                  <span className="pc-num">{p.n}</span>
+                  <span className="pc-tag">{p.tag}</span>
+                </div>
+                <h3 className="pc-title">{p.title}</h3>
+                <p className="pc-desc">{p.desc}</p>
+                <div className="pc-stack">{p.stack.map(s => <span key={s} className="pc-chip">{s}</span>)}</div>
+                <button className="pc-btn" type="button">Explore case study <ArrowRight size={14}/></button>
               </div>
-              <button className="pc-btn">View Project <ArrowRight size={14}/></button>
-              <div className="pc-ghost">{p.n}</div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
+      </div>
 
       {/* ══ SKILLS ════════════════════════════════════════ */}
-      <section className="section" id="skills">
+      <section className={`section stack-section skills-section ${projectComplete ? 'project-stage-done' : ''}`} id="skills">
         <div className="sec-head">
           <span className="sec-tag">/ Tech Stack</span>
           <h2 className="sec-title">Tools I <em>Master</em></h2>
@@ -435,7 +532,7 @@ export default function HeroSection({ theme, toggleTheme }) {
       </section>
 
       {/* ══ CONTACT ═══════════════════════════════════════ */}
-      <section className="section contact-sec" id="contact">
+      <section className="section stack-section contact-sec" id="contact">
         <div className="sec-head" style={{textAlign:'center'}}>
           <span className="sec-tag" style={{justifyContent:'center'}}>/ Contact</span>
           <h2 className="sec-title">

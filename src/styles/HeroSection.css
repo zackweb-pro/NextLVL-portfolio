@@ -1383,6 +1383,14 @@
 }
 .proj-card:hover .pc-ghost { opacity: 0.05; transform: translate(10px,-10px); }
 
+/* project index finishers (kept after the legacy card rules for cascade safety) */
+.proj-grid { gap:18px; }
+.proj-card { padding:0; background:var(--bg); transition:border-color .35s, transform .35s; }
+.proj-card:hover { transform:translateY(-6px); }
+.pc-body { padding:23px 23px 26px; min-height:270px; display:flex; flex-direction:column; gap:14px; }
+.pc-body .pc-desc { min-height:42px; }
+.pc-body .pc-btn { margin-top:auto; }
+
 /* ── SKILLS ─────────────────────────────────────────────── */
 .skills-list { display: flex; flex-direction: column; gap: 18px; }
 
@@ -1611,7 +1619,162 @@
   .zo-watermark { display: none; }
   .section { padding: 80px 24px; }
   .proj-grid { grid-template-columns: 1fr; }
+  .projects-head { display:block; }
+  .projects-intro { margin-top:24px; }
+  .project-filters { gap:14px; overflow:auto; white-space:nowrap; }
+  .all-work-link { display:none; }
   .footer { padding: 20px 24px; flex-direction: column; gap: 8px; text-align: center; }
   .ti-pg, .ti-node, .ti-react { display: none; }
   .ti-js { left: 45%; }
+}
+
+/* Studio-style project index */
+.projects-head { display:flex; align-items:end; justify-content:space-between; gap:48px; }
+.projects-intro { max-width:280px; font-family:var(--font-mono); font-size:11px; line-height:1.8; color:var(--fg-muted); }
+.project-filters { display:flex; align-items:center; gap:26px; border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:15px 0; margin-bottom:26px; }
+.filter-btn { color:var(--fg-muted); font:10px var(--font-mono); letter-spacing:1.5px; text-transform:uppercase; transition:color .25s; }
+.filter-btn span { color:var(--fg-dim); margin-left:5px; }
+.filter-btn:hover, .filter-btn.is-active { color:var(--fg); }
+.all-work-link { display:flex; align-items:center; gap:8px; margin-left:auto; color:var(--fg); font:10px var(--font-mono); letter-spacing:1.5px; text-transform:uppercase; }
+.proj-grid { grid-template-columns:repeat(3,1fr); gap:18px; }
+.proj-card { padding:0; border:1px solid var(--border); background:var(--bg); transition:border-color .35s, transform .35s; }
+.proj-card:hover { border-color:var(--border-md); transform:translateY(-6px); }
+.project-art { height:240px; position:relative; overflow:hidden; border-bottom:1px solid var(--border); }
+.project-art-image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.88; filter:saturate(.78) contrast(.96); transition:transform .7s cubic-bezier(.16,1,.3,1), opacity .35s; }
+.proj-card:hover .project-art-image { transform:scale(1.045); opacity:1; }
+.project-art-image + .art-browser { z-index:2; }
+.project-art-image ~ .art-content { z-index:1; text-shadow:0 2px 12px rgba(0,0,0,.32); }
+.project-art:has(.project-art-image) .art-content { display:none; }
+.art-nova { background:linear-gradient(135deg,#dce6db,#a9c2ae); color:#143526; }
+.art-atlas { background:linear-gradient(135deg,#24272e,#0d0f14); color:#e6e9ee; }
+.art-zackweb { background:linear-gradient(135deg,#d7d1c8,#a9a097); color:#25211e; }
+.art-browser { position:absolute; inset:13px 13px auto; display:flex; align-items:center; gap:5px; font:8px var(--font-mono); opacity:.7; }
+.art-browser i { width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.5; }
+.art-browser span { margin-left:9px; letter-spacing:1px; }
+.art-content { position:absolute; inset:60px 24px 20px; }
+.art-content small { font:8px var(--font-mono); letter-spacing:1.5px; opacity:.68; }
+.art-content strong { display:block; margin-top:23px; font:400 30px/1.02 var(--font-serif); letter-spacing:-1px; }
+.art-content em { font-style:italic; }
+.art-product { position:absolute; width:110px; height:145px; right:12px; bottom:-20px; border-radius:55px 55px 10px 10px; background:linear-gradient(160deg,#fff8e9,#9aab8f); box-shadow:10px 12px 20px #43634c55; transform:rotate(13deg); }
+.art-chart { position:absolute; right:8px; bottom:20px; width:115px; height:74px; display:flex; align-items:end; gap:8px; border-bottom:1px solid #ffffff38; }
+.art-chart b { display:block; width:12px; background:#b4e96d; height:35%; border-radius:3px 3px 0 0; }.art-chart b:nth-child(2){height:62%}.art-chart b:nth-child(3){height:45%}.art-chart b:nth-child(4){height:82%}.art-chart b:nth-child(5){height:100%}
+.art-orbit { position:absolute; width:160px; height:160px; right:-12px; bottom:-70px; border:1px solid #25211e77; border-radius:50%; box-shadow:0 0 0 18px #25211e12, 0 0 0 36px #25211e10; }
+.art-index { position:absolute; right:16px; top:16px; font:9px var(--font-mono); letter-spacing:1px; opacity:.6; }
+.pc-body { padding:23px 23px 26px; min-height:270px; display:flex; flex-direction:column; gap:14px; }
+.pc-body .pc-desc { min-height:42px; }
+.pc-body .pc-btn { margin-top:auto; }
+.reveal-on-scroll { opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.reveal-on-scroll.is-visible { opacity:1; transform:none; }
+.delay-1 { transition-delay:.05s; }.delay-2 { transition-delay:.14s; }.delay-3 { transition-delay:.23s; }
+@media (prefers-reduced-motion:reduce) { .reveal-on-scroll { opacity:1; transform:none; transition:none; } }
+@media (max-width:768px) {
+  .projects-head { display:block; }
+  .projects-intro { margin-top:24px; }
+  .project-filters { gap:14px; overflow:auto; white-space:nowrap; }
+  .all-work-link { display:none; }
+}
+
+/* Layered page rhythm: every panel pins to the viewport while the next one
+   slides over it. The translucent surface lets the previous panel soften
+   underneath instead of disappearing abruptly. */
+.stack-section {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  max-width: none;
+  min-height: 100svh;
+  margin: 0;
+  padding-left: max(48px, calc((100vw - 1104px) / 2));
+  padding-right: max(48px, calc((100vw - 1104px) / 2));
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+  border-top: 1px solid var(--border);
+  border-radius: 30px 30px 0 0;
+  box-shadow: 0 -18px 55px rgba(0,0,0,.18), 0 -1px 0 rgba(255,255,255,.05);
+}
+.stack-hero {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  isolation: isolate;
+}
+.projects-section {
+  z-index: 3;
+  /* Keep Projects as one sticky layer. Its content remains part of the page
+     flow; there is no nested or internal scrolling container. */
+  position: sticky;
+  min-height: 100svh;
+  overflow: visible;
+}
+.projects-scroll-shell {
+  position: relative;
+  /* Rail travel + one full viewport + roughly three card widths as a calm
+     end hold before the next panel takes over. */
+  height: calc(200svh + 3000px);
+}
+.projects-section {
+  overflow: hidden;
+}
+.project-rail {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  gap: 18px;
+  padding-right: 480px;
+  will-change: transform;
+  transition: transform .08s linear;
+}
+.project-rail .proj-card {
+  flex: 0 0 min(31vw, 350px);
+}
+.project-rail .proj-card.reveal-on-scroll {
+  opacity: 1;
+  transform: none;
+  transition: border-color .35s, box-shadow .35s;
+}
+#skills { z-index: 4; }
+#contact { z-index: 5; }
+#skills {
+  /* Enter only after the rail has reached its end, then cover the pinned
+     Projects panel during the final viewport of the stage. */
+  margin-top: calc(-100svh + 1px);
+}
+#skills.skills-section:not(.project-stage-done) {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+#skills.skills-section.project-stage-done {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .45s ease;
+}
+#contact {
+  margin-top: 0;
+}
+.stack-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--fg-muted), transparent);
+  opacity: .35;
+}
+@media (max-width: 768px) {
+  .stack-section { padding-left:24px; padding-right:24px; border-radius:22px 22px 0 0; }
+  .projects-section { padding-top:80px; padding-bottom:80px; }
+  .projects-scroll-shell { height: calc(200svh + 3500px); }
+  .project-rail { padding-right: 320px; }
+  .project-rail .proj-card { flex-basis: min(78vw, 340px); }
+  #skills { margin-top:calc(-100svh + 1px); }
+  #contact { margin-top:0; }
+  .project-art { height:190px; }
+  .pc-body { min-height:220px; padding:18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stack-section { position: relative; }
 }
