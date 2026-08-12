@@ -12,7 +12,7 @@ export default function ContactSection() {
         <a href="mailto:zakaria@example.com" className="cc-primary"><Mail size={18} /> zakaria@example.com</a>
         <a href="#" className="cc-secondary"><FileText size={16} /> Download CV</a>
       </div>
-      <div className="contact-links">{['GitHub ↗', 'LinkedIn ↗', 'X (Twitter) ↗'].map(label => <a key={label} href="#" className="cl-link">{label}</a>)}</div>
+      <div className="contact-links"><a href="https://github.com/zackweb-pro" target="_blank" rel="noreferrer" className="cl-link">GitHub ↗</a><a href="https://www.linkedin.com/in/zakaria-oumghar-gl" target="_blank" rel="noreferrer" className="cl-link">LinkedIn ↗</a><a href="https://x.com/zackweb_pro" target="_blank" rel="noreferrer" className="cl-link">X (Twitter) ↗</a></div>
     </section>
   );
 }

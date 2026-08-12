@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import HomeSection from './HomeSection';
 import ProjectsSection from './ProjectsSection';
+import ExperienceSection from './ExperienceSection';
 import SkillsSection from './SkillsSection';
 import ContactSection from './ContactSection';
 import { HamburgerMenu, Terminal } from './PortfolioChrome';
@@ -61,6 +62,7 @@ export default function HeroSection({ theme, toggleTheme }: { theme: string; tog
     <HamburgerMenu theme={theme} toggleTheme={toggleTheme} />
     <HomeSection theme={theme} toggleTheme={toggleTheme} heroRef={heroRef} iconRefs={iconRefs} terminal={<Terminal />} />
     <ProjectsSection shellRef={projectsShellRef} trackRef={projectTrackRef} offset={projectOffset} filter={projectFilter} setFilter={setProjectFilter} setComplete={setProjectComplete} />
+    <ExperienceSection />
     <SkillsSection projectComplete={projectComplete} />
     <ContactSection />
     <footer className="footer"><span className="foot-logo">Z·O</span><span className="foot-copy">© 2025 Zakaria Oumghar · Built with React</span><span className="foot-loc">Marrakesh, Morocco</span></footer>

@@ -29,9 +29,35 @@
   position: absolute;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
+}
+
+/* Eclipse halo behind the portrait: kept on the background layer so the
+   subject remains crisp above the light. */
+.hero-photo-bg::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  width: min(54vw, 760px);
+  aspect-ratio: 1;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(10, 10, 10, 0.58);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 14px rgba(10, 10, 10, 0.045),
+    0 0 0 42px rgba(10, 10, 10, 0.018),
+    0 0 24px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+.hero-photo-bg::after {
+  display: none;
 }
 
 .hero-bg-img {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -573,7 +599,7 @@
   z-index: 20;
   max-width: 470px;
   animation: slideRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 .tb-badge {
@@ -1663,6 +1689,73 @@
   flex-direction: column;
   gap: 18px;
 }
+.skills-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.skills-section .sec-head {
+  margin-bottom: 34px;
+}
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.skill-tile {
+  min-height: 118px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  transition:
+    transform 0.3s,
+    border-color 0.3s,
+    background 0.3s;
+}
+.skill-tile:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-md);
+  background: var(--surface);
+}
+.skill-tile .sk-icon {
+  width: 28px;
+  height: 28px;
+  opacity: 0.62;
+}
+.skill-tile-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.skill-tile-copy strong {
+  font: 400 18px var(--font-serif);
+  color: var(--fg);
+}
+.skill-tile-copy span {
+  font: 9px var(--font-mono);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.skill-arrow {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  font: 14px var(--font-mono);
+  color: var(--fg-muted);
+  transition:
+    transform 0.3s,
+    color 0.3s;
+}
+.skill-tile:hover .skill-arrow {
+  color: var(--fg);
+  transform: translate(3px, -3px);
+}
 
 .skill-row {
   display: flex;
@@ -1734,8 +1827,12 @@
 .sk-fill {
   height: 100%;
   background: var(--fg);
-  width: 0;
-  animation: grow 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+  width: 34%;
+  opacity: 0.32;
+}
+.sk-lettermark {
+  font: 700 24px var(--font-display);
+  color: var(--fg);
 }
 
 /* ── CONTACT ──────────────────────────────────────────── */
@@ -1971,6 +2068,9 @@
 }
 
 @media (max-width: 768px) {
+  .skills-section { justify-content:flex-start; }
+  .skills-grid { grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; }
+  .skill-tile { min-height:105px; padding:15px; }
   .nav {
     padding: 20px 20px;
   }
@@ -2372,22 +2472,170 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: linear-gradient(145deg, rgba(200,240,77,.12), transparent 55%);
+  background: linear-gradient(
+    145deg,
+    rgba(200, 240, 77, 0.12),
+    transparent 55%
+  );
 }
-.projects-empty span, .projects-empty p { font: 10px var(--font-mono); letter-spacing: 2px; color: var(--fg-muted); text-transform: uppercase; }
-.projects-empty strong { margin: 20px 0; font: 400 34px/1.05 var(--font-serif); color: var(--fg); }
-.projects-empty em { font-style: italic; }
-.projects-empty p { max-width: 220px; line-height: 1.7; letter-spacing: 1px; text-transform: none; }
-#skills {
+.projects-empty span,
+.projects-empty p {
+  font: 10px var(--font-mono);
+  letter-spacing: 2px;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+}
+.projects-empty strong {
+  margin: 20px 0;
+  font: 400 34px/1.05 var(--font-serif);
+  color: var(--fg);
+}
+.projects-empty em {
+  font-style: italic;
+}
+.projects-empty p {
+  max-width: 220px;
+  line-height: 1.7;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+.experience-section {
   z-index: 4;
 }
-#contact {
+.experience-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 48px;
+  margin-bottom: 56px;
+}
+.experience-list {
+  border-top: 1px solid var(--border);
+}
+.experience-item {
+  border-bottom: 1px solid var(--border);
+}
+.experience-summary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto 24px;
+  align-items: center;
+  gap: 20px;
+  padding: 26px 0;
+  text-align: left;
+  color: var(--fg);
+}
+.experience-summary:hover .experience-main strong {
+  color: var(--accent-dark);
+}
+.experience-index,
+.experience-period,
+.experience-location,
+.experience-skills span,
+.experience-link {
+  font: 10px var(--font-mono);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.experience-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.experience-main strong {
+  font: 400 24px var(--font-serif);
+  transition: color 0.25s;
+}
+.experience-main span {
+  font: 11px var(--font-mono);
+  color: var(--fg-muted);
+  letter-spacing: 1px;
+}
+.experience-period {
+  white-space: nowrap;
+}
+.experience-chevron {
+  color: var(--fg-muted);
+  transition: transform 0.35s;
+}
+.experience-item.is-open .experience-chevron {
+  transform: rotate(180deg);
+}
+.experience-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 48px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.35s,
+    padding 0.55s;
+  padding: 0 80px 0 76px;
+}
+.experience-item.is-open .experience-details {
+  max-height: 420px;
+  opacity: 1;
+  padding-bottom: 30px;
+}
+.experience-detail-copy {
+  max-width: 680px;
+}
+.experience-location {
+  display: block;
+  margin-bottom: 15px;
+}
+.experience-details p,
+.experience-details li {
+  font: 12px/1.75 var(--font-mono);
+  color: var(--fg-muted);
+}
+.experience-details ul {
+  margin: 12px 0 18px;
+  padding-left: 18px;
+}
+.experience-details li + li {
+  margin-top: 6px;
+}
+.experience-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.experience-skills span {
+  border: 1px solid var(--border-md);
+  padding: 7px 10px;
+}
+.experience-details img {
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  align-self: end;
+  filter: grayscale(0.15);
+  border: 1px solid var(--border);
+}
+.experience-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+  color: var(--fg);
+}
+.experience-link:hover {
+  color: var(--accent-dark);
+}
+#skills {
   z-index: 5;
+}
+#contact {
+  z-index: 6;
 }
 #skills {
   /* Enter only after the rail has reached its end, then cover the pinned
-     Projects panel during the final viewport of the stage. */
-  margin-top: calc(-100svh + 1px);
+     Experience panel during the final viewport of the stage. */
+  margin-top: 0;
 }
 #skills.skills-section:not(.project-stage-done) {
   visibility: hidden;
@@ -2413,6 +2661,15 @@
   opacity: 0.35;
 }
 @media (max-width: 768px) {
+  .hero-photo-bg::before {
+    width: 88vw;
+    top: 42%;
+  }
+  .hero-photo-bg::after {
+    width: 78vw;
+    height: 78vw;
+    top: 48%;
+  }
   .stack-section {
     padding-left: 24px;
     padding-right: 24px;
@@ -2431,9 +2688,39 @@
   .project-rail .proj-card {
     flex-basis: min(82vw, 390px);
   }
-  .projects-empty { flex-basis: min(82vw, 390px); }
+  .projects-empty {
+    flex-basis: min(82vw, 390px);
+  }
+  .experience-heading {
+    display: block;
+  }
+  .experience-summary {
+    grid-template-columns: 34px minmax(0, 1fr) 20px;
+    gap: 12px;
+    padding: 20px 0;
+  }
+  .experience-period {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 9px;
+  }
+  .experience-main strong {
+    font-size: 20px;
+  }
+  .experience-details {
+    display: block;
+    padding-left: 46px;
+    padding-right: 0;
+  }
+  .experience-item.is-open .experience-details {
+    max-height: 650px;
+  }
+  .experience-details img {
+    margin-top: 22px;
+    max-width: 280px;
+  }
   #skills {
-    margin-top: calc(-100svh + 1px);
+    margin-top: 0;
   }
   #contact {
     margin-top: 0;

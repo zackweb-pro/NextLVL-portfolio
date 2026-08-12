@@ -36,7 +36,8 @@ export default function HomeSection({ theme, toggleTheme, heroRef, iconRefs, ter
           <button className="theme-btn" onClick={toggleTheme} aria-label="toggle theme">
             {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
           </button>
-          <a href="#projects" className="nav-pill">→ View Projects</a>
+          {/* Temporarily hidden; keep available for a later navigation pass. */}
+          {/* <a href="#projects" className="nav-pill">→ View Projects</a> */}
         </div>
       </header>
       {TECH.map(({ id, img, label, cls }, index) => (
@@ -58,9 +59,9 @@ export default function HomeSection({ theme, toggleTheme, heroRef, iconRefs, ter
       </div>
       {terminal}
       <div className="hero-socials">
-        <a href="#" className="hs-link" aria-label="GitHub"><FaGithub size={20} /></a>
-        <a href="#" className="hs-link" aria-label="Instagram"><FaInstagram size={20} /></a>
-        <a href="#" className="hs-link" aria-label="X"><FaXTwitter size={20} /></a>
+        <a href="https://github.com/zackweb-pro" target="_blank" rel="noreferrer" className="hs-link" aria-label="GitHub"><FaGithub size={20} /></a>
+        <a href="https://www.instagram.com/zackweb.pro" target="_blank" rel="noreferrer" className="hs-link" aria-label="Instagram"><FaInstagram size={20} /></a>
+        <a href="https://x.com/zackweb_pro" target="_blank" rel="noreferrer" className="hs-link" aria-label="X"><FaXTwitter size={20} /></a>
       </div>
       <NameTypography />
     </section>
