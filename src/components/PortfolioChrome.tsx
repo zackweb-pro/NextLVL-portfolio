@@ -29,7 +29,7 @@ export function Terminal() {
 
 export function HamburgerMenu(_props: { theme: string; toggleTheme?: () => void }) { void _props;
   const [open, setOpen] = useState(false);
-  const links = [{ label: 'Home', href: '#home' }, { label: 'Projects', href: '#projects' }, { label: 'Experience', href: '#experience' }, { label: 'Skills', href: '#skills' }, { label: 'Contact', href: '#contact' }];
+  const links = [{ label: 'Home', href: '#home' }, { label: 'Projects', href: '#projects' }, { label: 'Experience', href: '#experience' }, { label: 'Certifications', href: '#certifications' }, { label: 'Contact', href: '#contact' }];
   const navigateTo = (href: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     setOpen(false);

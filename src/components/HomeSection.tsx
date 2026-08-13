@@ -1,7 +1,6 @@
 import type { MouseEvent, RefObject } from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
-import zackwebLog from '../assets/zackweb-logo.png';
+import { ArrowRight, ArrowUp } from 'lucide-react';
 import '../styles/HeroSection.css';
 
 type HomeSectionProps = { heroRef: RefObject<HTMLElement | null> };
@@ -12,6 +11,13 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
   const epicImageRef = useRef<HTMLImageElement | null>(null);
   const [isPersonHovered, setIsPersonHovered] = useState(false);
   const [isTitleHovered, setIsTitleHovered] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setHasScrolled(window.scrollY > 24);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     const photo = photoRef.current;
@@ -68,9 +74,6 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
       <canvas ref={hitCanvasRef} className="hero-hit-map" aria-hidden="true" />
       <div className="photo-fade-left" /><div className="photo-fade-right" /><div className="photo-fade-bottom" />
     </div>
-    <header className="nav clean-hero-nav">
-      <span className="nav-logo"><img src={zackwebLog} alt="ZACKWEB" /></span>
-    </header>
     <div className="text-block clean-hero-copy">
       <div className="tb-badge">DELIVERY SOFTWARE ENGINEER</div>
       <h1 className="tb-title">Building <span className="tb-highlight">Digital Experiences</span><br />that make you go WOOOOW!</h1>
@@ -78,5 +81,6 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
       <div className="tb-ctas"><a href="#projects" className="tb-btn tb-primary">View My Work <ArrowRight size={16} /></a><a href="#contact" className="tb-btn tb-secondary">Let’s collaborate <ArrowRight size={15} /></a></div>
     </div>
     <div className="clean-hero-role">DELIVERY SOFTWARE ENGINEER <span>·</span> ENSIAS</div>
+    <a href="#projects" className={`mobile-swipe-cue ${hasScrolled ? 'is-hidden' : ''}`} aria-label="Swipe up to view projects"><span>Swipe up</span><ArrowUp size={15} /></a>
   </section>;
 }

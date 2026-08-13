@@ -3,9 +3,10 @@ import HomeSection from './HomeSection';
 import ProjectsSection from './ProjectsSection';
 import ExperienceSection from './ExperienceSection';
 import EducationSection from './EducationSection';
-import SkillsSection from './SkillsSection';
+import CertificationsSection from './CertificationsSection';
 import ContactSection from './ContactSection';
 import { HamburgerMenu } from './PortfolioChrome';
+import zackwebLog from '../assets/zackweb-logo.png';
 import '../styles/HeroSection.css';
 
 export default function HeroSection({ theme, toggleTheme }: { theme: string; toggleTheme: () => void }) {
@@ -55,12 +56,13 @@ export default function HeroSection({ theme, toggleTheme }: { theme: string; tog
   }, [projectFilter]);
 
   return <div className="page-wrap" data-theme={theme}>
+    <a className="persistent-logo" href="#home" aria-label="Go to home"><img src={zackwebLog} alt="ZACKWEB" /></a>
     <HamburgerMenu theme={theme} toggleTheme={toggleTheme} />
     <HomeSection heroRef={heroRef} />
     <ProjectsSection shellRef={projectsShellRef} trackRef={projectTrackRef} offset={projectOffset} filter={projectFilter} setFilter={setProjectFilter} setComplete={setProjectComplete} />
     <ExperienceSection />
     <EducationSection />
-    <SkillsSection projectComplete={projectComplete} />
+    <CertificationsSection projectComplete={projectComplete} />
     <ContactSection />
     {/* <footer className="footer"><span className="foot-logo">Z·O</span><span className="foot-copy">© 2025 Zakaria Oumghar · Built with React</span><span className="foot-loc">Marrakesh, Morocco</span></footer> */}
   </div>;
