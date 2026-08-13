@@ -1,3 +1,5 @@
+import StickySection from './StickySection';
+
 const SKILLS = [
   { name: 'Java', img: '/assets/java-logo.png', note: 'Backend foundation' },
   { name: 'Spring Boot', img: '/assets/spring-logo.png', note: 'APIs & services' },
@@ -13,7 +15,7 @@ type SkillsSectionProps = { projectComplete: boolean };
 
 export default function SkillsSection({ projectComplete }: SkillsSectionProps) {
   return (
-    <section className={`section stack-section skills-section ${projectComplete ? 'project-stage-done' : ''}`} id="skills">
+    <StickySection id="skills" className={`section stack-section skills-section ${projectComplete ? 'project-stage-done' : ''}`}>
       <div className="sec-head"><span className="sec-tag">/ Tech Stack</span><h2 className="sec-title">Tools I <em>Master</em></h2></div>
       <div className="skills-grid">
         {SKILLS.map(({ name, img, note }) => (
@@ -24,6 +26,6 @@ export default function SkillsSection({ projectComplete }: SkillsSectionProps) {
           </div>
         ))}
       </div>
-    </section>
+    </StickySection>
   );
 }

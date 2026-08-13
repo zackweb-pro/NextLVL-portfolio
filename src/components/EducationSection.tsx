@@ -1,6 +1,8 @@
+import StickySection from './StickySection';
+
 const EDUCATION = [
   {
-    period: '2023 — Present',
+    period: '2023 — 2026',
     school: 'National School of Computer Science and Systems Analysis (ENSIAS)',
     location: 'Rabat, Morocco',
     degree: 'Engineering Degree in Software Engineering',
@@ -22,7 +24,7 @@ const EDUCATION = [
 ];
 
 export default function EducationSection() {
-  return <section className="section stack-section education-section" id="education">
+  return <StickySection id="education" className="section stack-section education-section">
     <div className="education-heading">
       <div><span className="sec-tag">/ Education</span><h2 className="sec-title">Academic <em>path</em></h2></div>
       <p className="projects-intro">The foundations behind my engineering practice and continued growth.</p>
@@ -34,5 +36,5 @@ export default function EducationSection() {
         <span className="education-period">{item.period}</span>
       </article>)}
     </div>
-  </section>;
+  </StickySection>;
 }

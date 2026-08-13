@@ -13,7 +13,7 @@ const PROJECTS: Project[] = [
   { n: '07', categories: ['Web applications'], title: 'Internship Applications', tag: 'Web application · Student', type: 'nova', image: '/assets/projects/searchstage.png', stack: ['React.js', 'Node.js', 'Oracle DB'], desc: 'A platform connecting students and recruiters for internship applications, backed by Oracle DB on OCI.' },
   { n: '08', categories: ['Other'], title: 'ENSIAS Chatbot', tag: 'Other · Information retrieval', type: 'zackweb', image: '/assets/projects/chatbot_ensias.png', stack: ['Python', 'Flask', 'NeuralIntents'], desc: 'An information-retrieval chatbot for ENSIAS built with Python, Flask and NeuralIntents.' },
   { n: '09', categories: ['Extensions'], title: 'Form Saver Pro', tag: 'Extension · Browser utility', type: 'atlas', image: '/assets/projects/FormSaver%20Pro.png', stack: ['JavaScript', 'Chrome Extension', 'Local Storage'], desc: 'A Chrome extension that keeps form inputs available after a page reload.' },
-  { n: '10', categories: ['Web applications'], title: 'Platform / Service Core', tag: 'Web application · Backend', type: 'atlas', image: '/assets/projects/plateform.png', stack: ['Java', 'PostgreSQL', 'Docker'], desc: 'A service foundation focused on dependable data, clear operations and scalable delivery.' },
+  { n: '10', categories: ['Web applications'], title: 'Nova Pioneer', tag: 'Web application · Microservices', type: 'atlas', image: '/assets/projects/plateform.png', stack: ['Spring Boot', 'React', 'PostgreSQL', 'Docker', 'NASA API'], desc: 'A web-based space learning platform for school-age children, with age-appropriate courses, NASA-powered real-time content, XP rewards, achievement badges and progress tracking. Its secure microservices architecture supports authentication, parent-child profiles, teacher content contributions, course management and parent dashboards.' },
   { n: '11', categories: ['Extensions'], title: 'UM5 Notes Calculator', tag: 'Extension · Student utility', type: 'nova', image: '/assets/projects/um5-notes-calculator.png', stack: ['JavaScript', 'Chrome Extension', 'Algorithms'], desc: 'A Chrome extension for Mohammed V University students that analyzes portal results, calculates semester and overall averages, detects validated modules and estimates the points needed to validate a module.' },
 ];
 
@@ -24,10 +24,10 @@ export default function ProjectsSection({ shellRef, trackRef, offset, filter, se
   const visibleProjects = PROJECTS.filter(project => filter === 'All work' || project.categories.includes(filter));
   return <div className="projects-scroll-shell" id="projects" ref={shellRef}>
     <section className="section stack-section projects-section">
-      <div className="sec-head projects-head reveal-on-scroll"><div><span className="sec-tag">/ Selected work · 2024—25</span><h2 className="sec-title">Built by <em>Zackweb</em></h2></div><p className="projects-intro">A selection of digital products, experiments and systems we shaped from first sketch to final release.</p></div>
+      <div className="sec-head projects-head reveal-on-scroll"><div><span className="sec-tag">/ Selected work · 2024—26</span><h2 className="sec-title">Built by <em>Zackweb</em></h2></div><p className="projects-intro">A selection of digital products, academic & work projects.</p></div>
       <div className="project-filters reveal-on-scroll" role="tablist" aria-label="Project filters">
         {FILTERS.map(current => { const count = current === 'All work' ? PROJECTS.length : PROJECTS.filter(project => project.categories.includes(current)).length; return <button key={current} className={`filter-btn ${filter === current ? 'is-active' : ''}`} type="button" onClick={() => { setFilter(current); setComplete(false); }}>{current} <span>{String(count).padStart(2, '0')}</span></button>; })}
-        <a href="#contact" className="all-work-link">Start a project <ArrowRight size={15} /></a>
+        <a href="https://github.com/zackweb-pro" target="_blank" rel="noreferrer" className="all-work-link">For more projects, visit my GitHub <ArrowRight size={15} /></a>
       </div>
       <div className="proj-grid project-rail" ref={trackRef} style={{ transform: `translate3d(-${offset}px, 0, 0)` }}>
         {visibleProjects.map((project, index) => <ProjectCard key={project.n} project={project} index={index} />)}
@@ -40,6 +40,6 @@ export default function ProjectsSection({ shellRef, trackRef, offset, filter, se
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   return <article className={`proj-card reveal-on-scroll delay-${index + 1}`}>
     <div className={`project-art art-${project.type}`} aria-hidden="true">{project.image && <img className="project-art-image" src={project.image} alt="" loading="lazy" />}<div className="art-browser"><i /><i /><i /><span>{project.title.split(' / ')[0].toLowerCase()}.studio</span></div><span className="art-index">{project.n} / {String(PROJECTS.length).padStart(2, '0')}</span></div>
-    <div className="pc-body"><div className="pc-top"><span className="pc-num">{project.n}</span><span className="pc-tag">{project.tag}</span></div><h3 className="pc-title">{project.title}</h3><p className="pc-desc">{project.desc}</p><div className="pc-stack">{project.stack.map(tag => <span key={tag} className="pc-chip">{tag}</span>)}</div><button className="pc-btn" type="button">Explore case study <ArrowRight size={14} /></button></div>
+    <div className="pc-body"><div className="pc-top"><span className="pc-num">{project.n}</span><span className="pc-tag">{project.tag}</span></div><h3 className="pc-title">{project.title}</h3><p className="pc-desc">{project.desc}</p><div className="pc-stack">{project.stack.map(tag => <span key={tag} className="pc-chip">{tag}</span>)}</div></div>
   </article>;
 }

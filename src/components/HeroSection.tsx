@@ -30,6 +30,11 @@ export default function HeroSection({ theme, toggleTheme }: { theme: string; tog
       const shell = projectsShellRef.current;
       const track = projectTrackRef.current;
       if (!shell || !track) return;
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        setProjectOffset(0);
+        setProjectComplete(true);
+        return;
+      }
       const bounds = shell.getBoundingClientRect();
       const section = track.parentElement;
       const styles = section ? getComputedStyle(section) : null;
@@ -57,6 +62,6 @@ export default function HeroSection({ theme, toggleTheme }: { theme: string; tog
     <EducationSection />
     <SkillsSection projectComplete={projectComplete} />
     <ContactSection />
-    <footer className="footer"><span className="foot-logo">Z·O</span><span className="foot-copy">© 2025 Zakaria Oumghar · Built with React</span><span className="foot-loc">Marrakesh, Morocco</span></footer>
+    {/* <footer className="footer"><span className="foot-logo">Z·O</span><span className="foot-copy">© 2025 Zakaria Oumghar · Built with React</span><span className="foot-loc">Marrakesh, Morocco</span></footer> */}
   </div>;
 }

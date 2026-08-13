@@ -19,7 +19,7 @@
 .hero {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   min-height: 640px;
   overflow: hidden;
 }
@@ -65,6 +65,43 @@
   pointer-events: none;
   /* In dark mode, the image gets a dark tint via mix-blend */
   transition: filter 0.4s;
+}
+
+.hero-bg-img-epic {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0;
+  transform: translateX(clamp(12px, 2vw, 28px))
+    translateY(clamp(22px, 3.4vh, 38px)) scale(1.07);
+  transform-origin: center top;
+  filter: saturate(1.08) contrast(1.04);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.65s ease;
+}
+
+.hero-photo-bg.is-person-hovered .hero-bg-img-epic {
+  opacity: 1;
+  transform: translateX(clamp(12px, 2vw, 28px))
+    translateY(clamp(22px, 3.4vh, 38px)) scale(1.035);
+  filter: saturate(1.12) contrast(1.06);
+}
+
+.hero-hit-map {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-img-epic,
+  .clean-hero-title {
+    transition: none;
+  }
 }
 
 [data-theme="dark"] .hero-bg-img {
@@ -359,6 +396,7 @@
   content: "";
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: rgba(0, 0, 0, 0.04);
   transform: translateX(-101%);
   transition: transform 0.3s ease;
@@ -1135,7 +1173,7 @@
   text-shadow: 0 0 6px rgba(255, 106, 193, 0.3);
 }
 
-./* ══════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    TERMINAL — Apple Liquid Glass
 ══════════════════════════════════════════════════════════ */
 .terminal {
@@ -1801,7 +1839,22 @@
   white-space: nowrap;
   text-align: center;
   opacity: 0.92;
-  pointer-events: none;
+  filter: blur(0);
+  text-shadow: 0 12px 36px color-mix(in srgb, var(--bg) 45%, transparent);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.55s ease;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.clean-hero-title.is-title-hovered {
+  z-index: 4;
+  transform: translateX(-50%) scale(1.025);
+  opacity: 1;
+  filter: drop-shadow(
+    0 10px 26px color-mix(in srgb, var(--fg) 18%, transparent)
+  );
 }
 .clean-hero-title span {
   color: var(--fg);
@@ -2051,7 +2104,7 @@
 
 /* ── FOOTER ─────────────────────────────────────────────── */
 .footer {
-  border-top: 1px solid var(--border);
+  border-top: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2550,7 +2603,7 @@
   z-index: 2;
   width: 100%;
   max-width: none;
-  min-height: 100svh;
+  min-height: 100dvh;
   margin: 0;
   padding-left: max(48px, calc((100vw - 1104px) / 2));
   padding-right: max(48px, calc((100vw - 1104px) / 2));
@@ -2558,10 +2611,8 @@
   -webkit-backdrop-filter: blur(13px);
   backdrop-filter: blur(13px);
   border-top: 1px solid var(--border);
-  border-radius: 30px 30px 0 0;
-  box-shadow:
-    0 -18px 55px rgba(0, 0, 0, 0.18),
-    0 -1px 0 rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  box-shadow: none;
 }
 .stack-hero {
   position: sticky;
@@ -2569,12 +2620,16 @@
   z-index: 1;
   isolation: isolate;
 }
+.section-shell {
+  position: relative;
+  min-height: 100dvh;
+}
 .projects-section {
   z-index: 3;
   /* Keep Projects as one sticky layer. Its content remains part of the page
      flow; there is no nested or internal scrolling container. */
   position: sticky;
-  min-height: 100svh;
+  min-height: 100dvh;
   overflow: visible;
 }
 .projects-scroll-shell {
@@ -2838,12 +2893,12 @@
      Experience panel during the final viewport of the stage. */
   margin-top: 0;
 }
-#skills.skills-section:not(.project-stage-done) {
+.section-shell#skills .skills-section:not(.project-stage-done) {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
 }
-#skills.skills-section.project-stage-done {
+.section-shell#skills .skills-section.project-stage-done {
   visibility: visible;
   opacity: 1;
   transition: opacity 0.45s ease;
@@ -2859,7 +2914,7 @@
   right: 12%;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--fg-muted), transparent);
-  opacity: 0.35;
+  opacity: 0.15;
 }
 @media (max-width: 768px) {
   .clean-hero .hero-photo-bg {
@@ -2907,26 +2962,71 @@
   .stack-section {
     padding-left: 24px;
     padding-right: 24px;
-    border-radius: 22px 22px 0 0;
+    border-radius: 0;
   }
   .projects-section {
+    position: relative;
     padding-top: 80px;
     padding-bottom: 80px;
   }
   .projects-scroll-shell {
-    height: calc(200svh + 3500px);
+    height: auto;
   }
   .project-rail {
-    padding-right: 320px;
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    padding-right: 0;
+    transform: none !important;
   }
   .project-rail .proj-card {
-    flex-basis: min(82vw, 390px);
+    width: 100%;
+    flex: none;
   }
   .projects-empty {
-    flex-basis: min(82vw, 390px);
+    width: 100%;
+    flex: none;
   }
   .experience-heading {
     display: block;
+  }
+  .education-heading {
+    display: block;
+    margin-bottom: 34px;
+  }
+  .education-heading .projects-intro {
+    margin-top: 20px;
+    max-width: 100%;
+  }
+  .education-item {
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    padding: 24px 0;
+  }
+  .education-index {
+    padding-top: 4px;
+    font-size: 9px;
+  }
+  .education-main h3 {
+    font-size: 21px;
+    line-height: 1.08;
+  }
+  .education-main p {
+    font-size: 10px;
+    line-height: 1.55;
+  }
+  .education-main span,
+  .education-main small,
+  .education-period {
+    font-size: 9px;
+    line-height: 1.55;
+  }
+  .education-period {
+    grid-column: 2;
+    grid-row: 2;
+    white-space: normal;
+    margin-top: 8px;
   }
   .experience-summary {
     grid-template-columns: 34px minmax(0, 1fr) 20px;

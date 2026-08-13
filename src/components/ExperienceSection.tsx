@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
+import StickySection from './StickySection';
 
 type Experience = { period: string; company: string; role: string; location: string; summary: string; details: string[]; skills: string[]; image?: string };
 
@@ -11,12 +12,12 @@ const EXPERIENCES: Experience[] = [
 
 export default function ExperienceSection() {
   const [openIndex, setOpenIndex] = useState(1);
-  return <section className="section stack-section experience-section" id="experience">
+  return <StickySection id="experience" className="section stack-section experience-section">
     <div className="experience-heading"><div><span className="sec-tag">/ Experience · 2024—now</span><h2 className="sec-title">Where I <em>worked</em></h2></div><p className="projects-intro">A record of the teams, products and systems I’ve helped move forward.</p></div>
     <div className="experience-list">{EXPERIENCES.map((experience, index) => { const isOpen = openIndex === index; return <article key={experience.company} className={`experience-item ${isOpen ? 'is-open' : ''}`}>
       <button className="experience-summary" type="button" onClick={() => setOpenIndex(isOpen ? -1 : index)} aria-expanded={isOpen}><span className="experience-index">0{index + 1}</span><span className="experience-main"><strong>{experience.company}</strong><span>{experience.role}</span></span><span className="experience-period">{experience.period}</span><ChevronDown size={17} className="experience-chevron" /></button>
       <div className="experience-details"><div className="experience-detail-copy"><span className="experience-location">{experience.location}</span><p>{experience.summary}</p><ul>{experience.details.map(detail => <li key={detail}>{detail}</li>)}</ul><div className="experience-skills">{experience.skills.map(skill => <span key={skill}>{skill}</span>)}</div></div>{experience.image && <img src={experience.image} alt={`${experience.company} project interface`} loading="lazy" />}</div>
     </article>; })}</div>
     <a className="experience-link" href="https://www.linkedin.com/in/zakaria-oumghar-gl" target="_blank" rel="noreferrer">View full experience on LinkedIn <ArrowUpRight size={15} /></a>
-  </section>;
+  </StickySection>;
 }
