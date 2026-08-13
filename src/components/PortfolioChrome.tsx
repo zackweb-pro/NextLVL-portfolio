@@ -4,10 +4,10 @@ import { FaGithub, FaXTwitter } from 'react-icons/fa6';
 
 const COMMANDS: Record<string, () => string[]> = {
   help: () => ['  Available commands:', '  about     — who is Zakaria', '  skills    — tech stack', '  projects  — shipped work', '  contact   — get in touch', '  clear     — clear terminal', '  ls        — list files'],
-  about: () => ['  Name    : Zakaria Oumghar', '  Role    : Software Engineering Student', '  Based   : Marrakesh, Morocco', '  Status  : Open to internships 2025'],
+  about: () => ['  Name    : Zakaria Oumghar', '  Role    : Software Engineering Student', '  Based   : Marrakesh, Morocco', '  Status  : Open to work contracts and freelancing'],
   skills: () => ['  Frontend : React.js · JavaScript · CSS', '  Backend  : Node.js · Spring Boot · Java', '  Database : PostgreSQL', '  Tools    : Git · REST APIs · Docker'],
   projects: () => ['  [1] OurBusWay → Spring · React · PostgreSQL', '  [2] ENSIAS Management → Spring · React · Docker', '  [3] Form Saver Pro → JavaScript · Chrome'],
-  contact: () => ['  Email    : zakaria@example.com', '  GitHub   : github.com/zakaria-oumghar', '  LinkedIn : linkedin.com/in/zakaria-oumghar'],
+  contact: () => ['  Email    : zakaria.oumghar.gl@gmail.com', '  GitHub   : github.com/zackweb-pro', '  LinkedIn : linkedin.com/in/zakaria-oumghar-gl'],
   ls: () => ['  total 48', '  drwxr-xr-x  5 zakaria dev  4096 Apr 03  about/', '  -rw-r--r--  1 zakaria dev   512 Apr 03  projects.json'],
 };
 

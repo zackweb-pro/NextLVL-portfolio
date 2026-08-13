@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import HomeSection from './HomeSection';
 import ProjectsSection from './ProjectsSection';
 import ExperienceSection from './ExperienceSection';
+import EducationSection from './EducationSection';
 import SkillsSection from './SkillsSection';
 import ContactSection from './ContactSection';
-import { HamburgerMenu, Terminal } from './PortfolioChrome';
+import { HamburgerMenu } from './PortfolioChrome';
 import '../styles/HeroSection.css';
 
 export default function HeroSection({ theme, toggleTheme }: { theme: string; toggleTheme: () => void }) {
   const heroRef = useRef<HTMLElement | null>(null);
-  const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
   const projectsShellRef = useRef<HTMLDivElement | null>(null);
   const projectTrackRef = useRef<HTMLDivElement | null>(null);
   const [projectFilter, setProjectFilter] = useState('All work');
@@ -49,20 +49,12 @@ export default function HeroSection({ theme, toggleTheme }: { theme: string; tog
     return () => { cancelAnimationFrame(frame); window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
   }, [projectFilter]);
 
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const onMove = (event: MouseEvent) => { const rect = hero.getBoundingClientRect(); const dx = (event.clientX - rect.left - rect.width / 2) / (rect.width / 2); const dy = (event.clientY - rect.top - rect.height / 2) / (rect.height / 2); iconRefs.current.forEach((element, index) => { if (element) element.style.transform = `translate(${dx * (0.5 + (index % 3) * 0.45) * 16}px, ${dy * (0.5 + (index % 3) * 0.45) * 9}px)`; }); };
-    const onLeave = () => iconRefs.current.forEach(element => { if (element) element.style.transform = ''; });
-    hero.addEventListener('mousemove', onMove); hero.addEventListener('mouseleave', onLeave);
-    return () => { hero.removeEventListener('mousemove', onMove); hero.removeEventListener('mouseleave', onLeave); };
-  }, []);
-
   return <div className="page-wrap" data-theme={theme}>
     <HamburgerMenu theme={theme} toggleTheme={toggleTheme} />
-    <HomeSection theme={theme} toggleTheme={toggleTheme} heroRef={heroRef} iconRefs={iconRefs} terminal={<Terminal />} />
+    <HomeSection heroRef={heroRef} />
     <ProjectsSection shellRef={projectsShellRef} trackRef={projectTrackRef} offset={projectOffset} filter={projectFilter} setFilter={setProjectFilter} setComplete={setProjectComplete} />
     <ExperienceSection />
+    <EducationSection />
     <SkillsSection projectComplete={projectComplete} />
     <ContactSection />
     <footer className="footer"><span className="foot-logo">Z·O</span><span className="foot-copy">© 2025 Zakaria Oumghar · Built with React</span><span className="foot-loc">Marrakesh, Morocco</span></footer>
