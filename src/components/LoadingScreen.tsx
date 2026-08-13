@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import '../styles/LoadingScreen.css';
 
-const LoadingScreen = ({ onComplete }) => {
+type LoadingScreenProps = { onComplete: () => void };
+
+const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('INITIALIZING...');
   const [isExiting, setIsExiting] = useState(false);
   const [showGlitch, setShowGlitch] = useState(false);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const text = "ZACKWEB";
   const messages = [
