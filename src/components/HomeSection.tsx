@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
-import { ArrowUpRight, Cloud, Code2, Database, PanelsTopLeft, Server, Smartphone, Sparkles, Terminal } from 'lucide-react';
+import { ArrowUpRight, Cloud, Database, PanelsTopLeft, Server, Smartphone, Sparkles, Terminal } from 'lucide-react';
 import '../styles/HeroSection.css';
 
 type HomeSectionProps = { heroRef: RefObject<HTMLElement | null> };
