@@ -31,7 +31,7 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
       {/* Main Copy */}
       <div className="reference-copy">
         <div className="reference-kicker">
-          <span className="kicker-pulse" /> SOFTWARE ENGINEER & CRAFTSMAN
+          <span className="kicker-pulse" /> DELIVERY SOFTWARE ENGINEER
         </div>
         <h1>
           Building digital<br />
