@@ -1,5 +1,6 @@
 import type { RefObject } from 'react';
-import { ArrowUpRight, Cloud, Database, PanelsTopLeft, Server, Smartphone, Sparkles, Terminal } from 'lucide-react';
+import {ArrowUpRight} from 'lucide-react';
+// import { ArrowUpRight, Cloud, Database, PanelsTopLeft, Server, Smartphone, Sparkles, Terminal } from 'lucide-react';
 import '../styles/HeroSection.css';
 
 type HomeSectionProps = { heroRef: RefObject<HTMLElement | null> };
@@ -13,13 +14,13 @@ const tech = [
   { src: '/assets/Docker_logo.webp', label: 'Docker', cat: 'DevOps' },
 ];
 
-const buildCapsules = [
-  { icon: PanelsTopLeft, name: 'Web Apps', tag: 'Next / React' },
-  { icon: Server, name: 'APIs', tag: 'REST / Microservices' },
-  { icon: Smartphone, name: 'Mobile', tag: 'Cross-platform' },
-  { icon: Database, name: 'Data', tag: 'SQL / Redis' },
-  { icon: Cloud, name: 'DevOps', tag: 'CI/CD & Cloud' },
-];
+// const buildCapsules = [
+//   { icon: PanelsTopLeft, name: 'Web Apps', tag: 'Next / React' },
+//   { icon: Server, name: 'APIs', tag: 'REST / Microservices' },
+//   { icon: Smartphone, name: 'Mobile', tag: 'Cross-platform' },
+//   { icon: Database, name: 'Data', tag: 'SQL / Redis' },
+//   { icon: Cloud, name: 'DevOps', tag: 'CI/CD & Cloud' },
+// ];
 
 export default function HomeSection({ heroRef }: HomeSectionProps) {
   return (
