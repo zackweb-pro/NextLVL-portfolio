@@ -8,9 +8,9 @@ const tech = [
   { src: '/assets/java-logo.png', label: 'Java', cat: 'Backend' },
   { src: '/assets/spring-logo.png', label: 'Spring Boot', cat: 'Framework' },
   { src: '/assets/react-logo.png', label: 'React', cat: 'Frontend' },
-  { src: null, label: 'Flutter', cat: 'Mobile' },
+  { src: '/assets/Flutter_logo.webp', label: 'Flutter', cat: 'Mobile' },
   { src: '/assets/postgres-logo.png', label: 'PostgreSQL', cat: 'Database' },
-  { src: null, label: 'Docker', cat: 'DevOps' },
+  { src: '/assets/Docker_logo.webp', label: 'Docker', cat: 'DevOps' },
 ];
 
 const buildCapsules = [
