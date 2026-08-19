@@ -69,7 +69,7 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
         </div>
 
         {/* Floating Micro-Widget 1: Left Code Architecture Capsule */}
-        <aside className="widget-capsule code-widget">
+        {/* <aside className="widget-capsule code-widget">
           <div className="widget-header">
             <div className="widget-icon-box">
               <Terminal size={15} />
@@ -86,10 +86,10 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
             <span className="w-tag">#CleanCode</span>
             <span className="w-tag">#SOLID</span>
           </div>
-        </aside>
+        </aside> */}
 
         {/* Floating Micro-Widget 2: Right Capabilities Widget */}
-        <aside className="widget-capsule build-widget">
+        {/* <aside className="widget-capsule build-widget">
           <div className="widget-header">
             <Sparkles size={15} className="sparkle-gold" />
             <div className="widget-title">
@@ -108,7 +108,7 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
               </div>
             ))}
           </div>
-        </aside>
+        </aside> */}
       </div>
 
       {/* <div className="visual-index">01 <span>/</span> DIGITAL CRAFT</div> */}
