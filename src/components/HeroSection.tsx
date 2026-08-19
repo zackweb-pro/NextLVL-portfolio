@@ -6,7 +6,6 @@ import EducationSection from './EducationSection';
 import CertificationsSection from './CertificationsSection';
 import ContactSection from './ContactSection';
 import { HamburgerMenu } from './PortfolioChrome';
-import zackwebLog from '../assets/zackweb-logo.png';
 import '../styles/HeroSection.css';
 
 export default function HeroSection({ theme, toggleTheme }: { theme: string; toggleTheme: () => void }) {
@@ -56,7 +55,7 @@ export default function HeroSection({ theme, toggleTheme }: { theme: string; tog
   }, [projectFilter]);
 
   return <div className="page-wrap" data-theme={theme}>
-    <a className="persistent-logo" href="#home" aria-label="Go to home"><img src={zackwebLog} alt="ZACKWEB" /></a>
+    <a className="persistent-logo" href="#home" aria-label="Go to home"><img src="/assets/zackweb-logo.png" alt="ZACKWEB" /></a>
     <HamburgerMenu theme={theme} toggleTheme={toggleTheme} />
     <HomeSection heroRef={heroRef} />
     <ProjectsSection shellRef={projectsShellRef} trackRef={projectTrackRef} offset={projectOffset} filter={projectFilter} setFilter={setProjectFilter} setComplete={setProjectComplete} />

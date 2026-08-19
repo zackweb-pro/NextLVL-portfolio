@@ -1,86 +1,139 @@
-import type { MouseEvent, RefObject } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ArrowUp } from 'lucide-react';
+import type { RefObject } from 'react';
+import { ArrowUpRight, Cloud, Code2, Database, PanelsTopLeft, Server, Smartphone, Sparkles, Terminal } from 'lucide-react';
 import '../styles/HeroSection.css';
 
 type HomeSectionProps = { heroRef: RefObject<HTMLElement | null> };
 
+const tech = [
+  { src: '/assets/java-logo.png', label: 'Java', cat: 'Backend' },
+  { src: '/assets/spring-logo.png', label: 'Spring Boot', cat: 'Framework' },
+  { src: '/assets/react-logo.png', label: 'React', cat: 'Frontend' },
+  { src: null, label: 'Flutter', cat: 'Mobile' },
+  { src: '/assets/postgres-logo.png', label: 'PostgreSQL', cat: 'Database' },
+  { src: null, label: 'Docker', cat: 'DevOps' },
+];
+
+const buildCapsules = [
+  { icon: PanelsTopLeft, name: 'Web Apps', tag: 'Next / React' },
+  { icon: Server, name: 'APIs', tag: 'REST / Microservices' },
+  { icon: Smartphone, name: 'Mobile', tag: 'Cross-platform' },
+  { icon: Database, name: 'Data', tag: 'SQL / Redis' },
+  { icon: Cloud, name: 'DevOps', tag: 'CI/CD & Cloud' },
+];
+
 export default function HomeSection({ heroRef }: HomeSectionProps) {
-  const photoRef = useRef<HTMLDivElement | null>(null);
-  const hitCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const epicImageRef = useRef<HTMLImageElement | null>(null);
-  const [isPersonHovered, setIsPersonHovered] = useState(false);
-  const [isTitleHovered, setIsTitleHovered] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
+  return (
+    <section className="hero reference-hero stack-hero" id="home" ref={heroRef}>
+      {/* Background grid & ambient illumination */}
+      <div className="reference-grid" aria-hidden="true" />
+      <div className="portrait-glow" aria-hidden="true" />
 
-  useEffect(() => {
-    const onScroll = () => setHasScrolled(window.scrollY > 24);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    const photo = photoRef.current;
-    const image = epicImageRef.current;
-    const canvas = hitCanvasRef.current;
-    if (!photo || !image || !canvas) return;
-    const context = canvas.getContext('2d', { willReadFrequently: true });
-    if (!context) return;
-
-    const prepareHitMap = () => {
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(image, 0, 0);
-    };
-    if (image.complete) prepareHitMap();
-    image.addEventListener('load', prepareHitMap);
-    return () => image.removeEventListener('load', prepareHitMap);
-  }, []);
-
-  const moveOverPhoto = (event: MouseEvent<HTMLDivElement>) => {
-    const photo = photoRef.current;
-    const image = epicImageRef.current;
-    const canvas = hitCanvasRef.current;
-    if (!photo || !image || !canvas || !image.naturalWidth) return;
-    const context = canvas.getContext('2d', { willReadFrequently: true });
-    if (!context) return;
-    const bounds = photo.getBoundingClientRect();
-    const scale = Math.max(bounds.width / image.naturalWidth, bounds.height / image.naturalHeight);
-    const renderedWidth = image.naturalWidth * scale;
-    const renderedHeight = image.naturalHeight * scale;
-    const imageX = (bounds.width - renderedWidth) / 2;
-    const imageY = (bounds.height - renderedHeight) / 2;
-    const sourceX = (event.clientX - bounds.left - imageX) / scale;
-    const sourceY = (event.clientY - bounds.top - imageY) / scale;
-    const x = Math.floor(sourceX);
-    const y = Math.floor(sourceY);
-    const alpha = x >= 0 && y >= 0 && x < canvas.width && y < canvas.height
-      ? context.getImageData(x, y, 1, 1).data[3]
-      : 0;
-    setIsPersonHovered(alpha > 28);
-  };
-
-  return <section className="hero stack-hero clean-hero" id="home" ref={heroRef}>
-    <div className={`hero-photo-bg ${isPersonHovered ? 'is-person-hovered' : ''}`} ref={photoRef} onMouseMove={moveOverPhoto} onMouseLeave={() => setIsPersonHovered(false)}>
-      <div
-        className={`clean-hero-title ${isTitleHovered ? 'is-title-hovered' : ''}`}
-        onMouseEnter={() => setIsTitleHovered(true)}
-        onMouseLeave={() => setIsTitleHovered(false)}
-      >
-        ZAKARIA <span>OUMGHAR</span>
+      {/* Main Copy */}
+      <div className="reference-copy">
+        <div className="reference-kicker">
+          <span className="kicker-pulse" /> SOFTWARE ENGINEER & CRAFTSMAN
+        </div>
+        <h1>
+          Building digital<br />
+          <em>experiences</em><br />
+          that make you<br />
+          go woooow!
+        </h1>
+        <p>
+          Specialized in high-performance web systems, resilient APIs,<br className="desktop-break" />
+          and crafted user interfaces that leave a lasting impression.
+        </p>
+        <div className="reference-actions">
+          <a className="reference-primary" href="#projects">
+            VIEW WORK <ArrowUpRight size={17} />
+          </a>
+          <a className="reference-secondary" href="#contact">
+            LET'S TALK <ArrowUpRight size={17} />
+          </a>
+        </div>
       </div>
-      <img ref={epicImageRef} src="/assets/Hero_pic_epic.png" alt="Zakaria Oumghar" className="hero-bg-img hero-bg-img-epic" />
-      <canvas ref={hitCanvasRef} className="hero-hit-map" aria-hidden="true" />
-      <div className="photo-fade-left" /><div className="photo-fade-right" /><div className="photo-fade-bottom" />
-    </div>
-    <div className="text-block clean-hero-copy">
-      <div className="tb-badge">DELIVERY SOFTWARE ENGINEER</div>
-      <h1 className="tb-title">Building <span className="tb-highlight">Digital Experiences</span><br />that make you go WOOOOW!</h1>
-      <p className="tb-desc">Delivery software engineer crafting elegant, reliable solutions for the web and beyond.</p>
-      <div className="tb-ctas"><a href="#projects" className="tb-btn tb-primary">View My Work <ArrowRight size={16} /></a><a href="#contact" className="tb-btn tb-secondary">Let’s collaborate <ArrowRight size={15} /></a></div>
-    </div>
-    <div className="clean-hero-role">DELIVERY SOFTWARE ENGINEER <span>·</span> ENSIAS</div>
-    <a href="#projects" className={`mobile-swipe-cue ${hasScrolled ? 'is-hidden' : ''}`} aria-label="Swipe up to view projects"><span>Swipe up</span><ArrowUp size={15} /></a>
-  </section>;
+
+      {/* Portrait Stage with Rounded Architectural Frame & Integrated Floating Widgets */}
+      <div className="portrait-stage">
+        {/* Rounded Glass Frame containing the portrait */}
+        <div className="portrait-rounded-frame">
+          <div className="portrait-frame-glass-bg" />
+          <div className="portrait-frame-inner">
+            <img src="/assets/Hero_pic_epic.png" alt="Zakaria Oumghar" className="portrait-img" />
+          </div>
+          <div className="portrait-frame-border" />
+          <div className="portrait-frame-dashed-ring" />
+          <div className="portrait-corner-plus top-left">+</div>
+          <div className="portrait-corner-plus top-right">+</div>
+          <div className="portrait-stamp">ZAKARIA OUMGHAR — ENSIAS ALUMNI 2026</div>
+        </div>
+
+        {/* Floating Micro-Widget 1: Left Code Architecture Capsule */}
+        <aside className="widget-capsule code-widget">
+          <div className="widget-header">
+            <div className="widget-icon-box">
+              <Terminal size={15} />
+            </div>
+            <div className="widget-title">
+              <strong>Architecture</strong>
+              <span>Clean Code & Scalability</span>
+            </div>
+          </div>
+          <div className="widget-code-snippet">
+            <code><span className="code-kw">const</span> <span className="code-fn">craft</span> = <span className="code-str">"robust"</span>;</code>
+          </div>
+          <div className="widget-tags">
+            <span className="w-tag">#CleanCode</span>
+            <span className="w-tag">#SOLID</span>
+          </div>
+        </aside>
+
+        {/* Floating Micro-Widget 2: Right Capabilities Widget */}
+        <aside className="widget-capsule build-widget">
+          <div className="widget-header">
+            <Sparkles size={15} className="sparkle-gold" />
+            <div className="widget-title">
+              <strong>Capabilities</strong>
+              <span className="status-online"><i /> Available for Hire</span>
+            </div>
+          </div>
+          <div className="widget-build-pills">
+            {buildCapsules.map(({ icon: Icon, name, tag }) => (
+              <div className="build-pill-item" key={name}>
+                <div className="bpi-icon"><Icon size={13} strokeWidth={1.8} /></div>
+                <div className="bpi-copy">
+                  <strong>{name}</strong>
+                  <small>{tag}</small>
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </div>
+
+      {/* <div className="visual-index">01 <span>/</span> DIGITAL CRAFT</div> */}
+
+      {/* Bottom Floating Tech Dock */}
+      <div className="tech-dock-wrapper">
+        <div className="tech-dock-label">TECH STACK & CORE TOOLING</div>
+        <div className="tech-dock">
+          {tech.map(({ src, label, cat }) => (
+            <div className="dock-item" key={label}>
+              <div className="dock-icon-wrap">
+                {src ? (
+                  <img src={src} alt={label} />
+                ) : (
+                  <b className="dock-fallback">{label[0]}</b>
+                )}
+              </div>
+              <div className="dock-tooltip">
+                <strong>{label}</strong>
+                <span>{cat}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
