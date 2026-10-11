@@ -37,6 +37,7 @@ export default function ProjectsSection({ filter, setFilter }: ProjectsSectionPr
 
   const startDrag = (event: PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
+    if (window.matchMedia('(max-width: 768px)').matches) return;
     if ((event.target as HTMLElement).closest('button, a')) return;
     const viewport = viewportRef.current;
     if (!viewport) return;
