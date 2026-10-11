@@ -1,4 +1,4 @@
-import type { RefObject } from 'react';
+import { useRef, useState, type PointerEvent } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 type Project = { n: string; categories: string[]; title: string; tag: string; type: string; image?: string; stack: string[]; desc: string };
@@ -18,20 +18,83 @@ const PROJECTS: Project[] = [
 ];
 
 const FILTERS = ['All work', 'Web applications', 'Mobile applications', 'Extensions', 'Other'];
-type ProjectsSectionProps = { shellRef: RefObject<HTMLDivElement | null>; trackRef: RefObject<HTMLDivElement | null>; offset: number; filter: string; setFilter: (filter: string) => void; setComplete: (complete: boolean) => void };
+type ProjectsSectionProps = { filter: string; setFilter: (filter: string) => void };
 
-export default function ProjectsSection({ shellRef, trackRef, offset, filter, setFilter, setComplete }: ProjectsSectionProps) {
-  const visibleProjects = PROJECTS.filter(project => filter === 'All work' || project.categories.includes(filter));
-  return <div className="projects-scroll-shell" id="projects" ref={shellRef}>
+export default function ProjectsSection({ filter, setFilter }: ProjectsSectionProps) {
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const dragState = useRef({ active: false, startX: 0, scrollLeft: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  const filteredProjects = PROJECTS.filter(project => filter === 'All work' || project.categories.includes(filter));
+  const visibleProjects = showAll ? filteredProjects : filteredProjects.slice(0, 3);
+  const hiddenCount = filteredProjects.length - visibleProjects.length;
+
+  const selectFilter = (nextFilter: string) => {
+    setFilter(nextFilter);
+    setShowAll(false);
+    viewportRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
+  };
+
+  const startDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    if ((event.target as HTMLElement).closest('button, a')) return;
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    dragState.current = { active: true, startX: event.clientX, scrollLeft: viewport.scrollLeft };
+    viewport.setPointerCapture(event.pointerId);
+    setIsDragging(true);
+  };
+
+  const moveDrag = (event: PointerEvent<HTMLDivElement>) => {
+    const viewport = viewportRef.current;
+    if (!viewport || !dragState.current.active) return;
+    const distance = event.clientX - dragState.current.startX;
+    viewport.scrollLeft = dragState.current.scrollLeft - distance;
+  };
+
+  const endDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (!dragState.current.active) return;
+    dragState.current.active = false;
+    if (viewportRef.current?.hasPointerCapture(event.pointerId)) {
+      viewportRef.current.releasePointerCapture(event.pointerId);
+    }
+    setIsDragging(false);
+  };
+
+  const revealAllProjects = () => setShowAll(true);
+
+  return <div className="projects-scroll-shell" id="projects">
     <section className="section stack-section projects-section">
       <div className="sec-head projects-head reveal-on-scroll"><div><span className="sec-tag">/ Selected work · 2024—26</span><h2 className="sec-title">Built by <em>Zackweb</em></h2></div><p className="projects-intro">A selection of digital products, academic & work projects.</p></div>
       <div className="project-filters reveal-on-scroll" role="tablist" aria-label="Project filters">
-        {FILTERS.map(current => { const count = current === 'All work' ? PROJECTS.length : PROJECTS.filter(project => project.categories.includes(current)).length; return <button key={current} className={`filter-btn ${filter === current ? 'is-active' : ''}`} type="button" onClick={() => { setFilter(current); setComplete(false); }}>{current} <span>{String(count).padStart(2, '0')}</span></button>; })}
+        {FILTERS.map(current => { const count = current === 'All work' ? PROJECTS.length : PROJECTS.filter(project => project.categories.includes(current)).length; return <button key={current} className={`filter-btn ${filter === current ? 'is-active' : ''}`} type="button" onClick={() => selectFilter(current)}>{current} <span>{String(count).padStart(2, '0')}</span></button>; })}
         <a href="https://github.com/zackweb-pro" target="_blank" rel="noreferrer" className="all-work-link">For more projects, visit my GitHub <ArrowRight size={15} /></a>
       </div>
-      <div className="proj-grid project-rail" ref={trackRef} style={{ transform: `translate3d(-${offset}px, 0, 0)` }}>
-        {visibleProjects.map((project, index) => <ProjectCard key={project.n} project={project} index={index} />)}
-        {visibleProjects.length === 0 && <div className="projects-empty"><span>00 / MOBILE</span><strong>Mobile work is<br /><em>coming next.</em></strong><p>No mobile applications in this collection yet.</p></div>}
+      <div className="project-rail-meta" aria-hidden="true">
+        <span>{showAll ? `${filteredProjects.length} projects` : `${visibleProjects.length} featured projects`}</span>
+        <span>Drag or scroll to explore <ArrowRight size={13} /></span>
+      </div>
+      <div
+        className={`project-viewport ${isDragging ? 'is-dragging' : ''}`}
+        ref={viewportRef}
+        onPointerDown={startDrag}
+        onPointerMove={moveDrag}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onDragStart={event => event.preventDefault()}
+        tabIndex={0}
+        aria-label="Projects carousel. Drag horizontally or use the arrow keys to explore."
+      >
+        <div className="proj-grid project-rail">
+          {visibleProjects.map((project, index) => <ProjectCard key={project.n} project={project} index={index} />)}
+          {hiddenCount > 0 && <button className="projects-more-card" type="button" onClick={revealAllProjects}>
+            <span>03 / {String(filteredProjects.length).padStart(2, '0')} shown</span>
+            <strong>See all<br /><em>{hiddenCount} more projects</em></strong>
+            <p>Open the complete project collection.</p>
+            <i>Explore all <ArrowRight size={16} /></i>
+          </button>}
+          {visibleProjects.length === 0 && <div className="projects-empty"><span>00 / MOBILE</span><strong>Mobile work is<br /><em>coming next.</em></strong><p>No mobile applications in this collection yet.</p></div>}
+        </div>
       </div>
     </section>
   </div>;

@@ -13,7 +13,7 @@ const CERTIFICATIONS = [
   { title: 'SQL (Intermediate)', issuer: 'HackerRank', image: '/assets/certifications/sql_intermediate certificate-1.png' },
 ];
 
-export default function CertificationsSection({ projectComplete }: { projectComplete: boolean }) {
+export default function CertificationsSection() {
   const gridRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function CertificationsSection({ projectComplete }: { projectComp
     return () => observer.disconnect();
   }, []);
 
-  return <StickySection id="certifications" className={`section stack-section certifications-section ${projectComplete ? 'project-stage-done' : ''}`}>
+  return <StickySection id="certifications" className="section stack-section certifications-section">
     <div className="sec-head"><span className="sec-tag">/ Certifications</span><h2 className="sec-title">Proof of <em>practice</em></h2><p className="certifications-intro">My passion for technology started in 2020 and continues through every project, skill and certification.</p></div>
     <div className="certifications-grid" ref={gridRef}>
       {CERTIFICATIONS.map(certification => <article className="certification-card reveal-on-scroll" key={certification.title}>
