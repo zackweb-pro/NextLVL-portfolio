@@ -6,7 +6,9 @@ import EducationSection from './EducationSection';
 import CertificationsSection from './CertificationsSection';
 import ContactSection from './ContactSection';
 import { HamburgerMenu } from './PortfolioChrome';
+import ScrollRail from './ScrollRail';
 import '../styles/HeroSection.css';
+import '../styles/ScrollRail.css';
 
 export default function HeroSection({ theme, toggleTheme }: { theme: string; toggleTheme: () => void }) {
   const heroRef = useRef<HTMLElement | null>(null);
@@ -23,6 +25,7 @@ export default function HeroSection({ theme, toggleTheme }: { theme: string; tog
   return <div className="page-wrap" data-theme={theme}>
     <a className="persistent-logo" href="#home" aria-label="Go to home"><img src="/assets/zackweb-logo.png" alt="ZACKWEB" /></a>
     <HamburgerMenu theme={theme} toggleTheme={toggleTheme} />
+    <ScrollRail />
     <HomeSection heroRef={heroRef} />
     <ProjectsSection filter={projectFilter} setFilter={setProjectFilter} />
     <ExperienceSection />

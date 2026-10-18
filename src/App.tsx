@@ -4,14 +4,12 @@ import LoadingScreen from './components/LoadingScreen';
 import './styles/global.css';
 
 function App() {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => localStorage.getItem('zo-theme') || 'light');
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('zo-theme') || 'light';
-    setTheme(saved);
-    document.documentElement.setAttribute('data-theme', saved);
-  }, []);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const toggleTheme = () => {
     const next = theme === 'light' ? 'dark' : 'light';
@@ -22,7 +20,7 @@ function App() {
 
   return (
     <div className="app">
-      <LoadingScreen onComplete={() => setShowContent(true)} />
+      {!showContent && <LoadingScreen onComplete={() => setShowContent(true)} />}
       {showContent && <HeroSection theme={theme} toggleTheme={toggleTheme} />}
     </div>
   );
