@@ -23,7 +23,22 @@ export default function HeroSection({ theme, toggleTheme }: { theme: string; tog
   }, [projectFilter]);
 
   return <div className="page-wrap" data-theme={theme}>
-    <a className="persistent-logo" href="#home" aria-label="Go to home"><img src="/assets/zackweb-logo.png" alt="ZACKWEB" /></a>
+    <a className="persistent-logo" href="#home" aria-label="ZACKWEB — go to home">
+      <span className="persistent-logo-mark" aria-hidden="true">
+        <img src="/assets/zackweb-logo.png" alt="" />
+        <span className="hero-brand-proxies">
+          <span className="hero-zackweb-character">Z</span>
+          <span className="hero-zackweb-character">A</span>
+        </span>
+      </span>
+      <span className="hero-brand-tail" aria-hidden="true">
+        {Array.from('CKWEB').map((character, index) => (
+          <span className="hero-zackweb-character" key={`${character}-${index}`}>
+            {character}
+          </span>
+        ))}
+      </span>
+    </a>
     <HamburgerMenu theme={theme} toggleTheme={toggleTheme} />
     <ScrollRail />
     <HomeSection heroRef={heroRef} />

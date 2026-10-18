@@ -185,6 +185,19 @@
     pointer-events: none;
   }
 
+  .instrument-hero-mark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    display: block;
+    height: auto;
+    opacity: 0;
+    transform-origin: center;
+    will-change: transform, opacity;
+    pointer-events: none;
+  }
+
   .instrument-hitbox {
     position: fixed;
     top: 0;

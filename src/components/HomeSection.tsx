@@ -73,7 +73,6 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
 
         <div className="hero-right">
           <div className="portrait-stage">
-            <div className="portrait-ambient" aria-hidden="true" />
             <div className="portrait-dot-field" aria-hidden="true" />
             <div className="portrait-orbit" aria-hidden="true" />
 

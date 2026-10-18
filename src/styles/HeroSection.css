@@ -2560,13 +2560,84 @@
   color: #16181a;
 }
 
+.reference-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bg) 88%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 78%, transparent) 55%,
+      color-mix(in srgb, var(--bg) 84%, transparent) 100%
+    ),
+    url("/assets/ENSIAS_BG.png") center bottom / contain no-repeat;
+  filter: grayscale(1);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
 .persistent-logo {
   top: 18px;
-  left: 2.8vw;
+  left: calc((100vw - var(--instrument-rail, 0px)) / 2);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  color: #101214;
+  transform: translateX(-50%);
+  transition: opacity 80ms linear;
 }
 
 .persistent-logo img {
   width: clamp(70px, 4.1vw, 82px);
+}
+
+.persistent-logo-mark {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+.hero-brand-tail {
+  display: flex;
+  align-items: center;
+  margin-left: -6px;
+  color: #101214;
+  font: 800 clamp(34px, 2.75vw, 48px)/0.9 var(--font-ui);
+  letter-spacing: -0.065em;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px #c88d3f;
+  paint-order: stroke fill;
+  text-shadow: 0 2px 14px color-mix(in srgb, var(--bg) 76%, transparent);
+}
+
+.hero-brand-tail .hero-zackweb-character {
+  display: block;
+}
+
+.hero-brand-proxies {
+  position: absolute;
+  inset: 0;
+  font: 800 clamp(34px, 2.75vw, 48px)/0.9 var(--font-ui);
+  pointer-events: none;
+}
+
+.hero-brand-proxies .hero-zackweb-character {
+  position: absolute;
+  top: 50%;
+  display: block;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.hero-brand-proxies .hero-zackweb-character:first-child {
+  left: 30%;
+}
+
+.hero-brand-proxies .hero-zackweb-character:last-child {
+  left: 72%;
 }
 
 .ham-btn {
@@ -3158,7 +3229,7 @@
 @media (max-width: 560px) {
   .persistent-logo {
     top: 17px;
-    left: 18px;
+    left: 50%;
   }
 
   .persistent-logo img {

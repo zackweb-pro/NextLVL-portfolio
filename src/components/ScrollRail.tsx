@@ -17,6 +17,18 @@ type WordMetrics = {
   width: number;
 };
 
+type HeroCharacterOrigin = {
+  x: number;
+  y: number;
+  scale: number;
+};
+
+type HeroMarkOrigin = {
+  x: number;
+  y: number;
+  width: number;
+};
+
 const clamp = (value: number, min = 0, max = 1) => Math.min(Math.max(value, min), max);
 const lerp = (from: number, to: number, amount: number) => from + (to - from) * amount;
 const ease = (value: number) => 1 - Math.pow(1 - clamp(value), 3);
@@ -33,6 +45,7 @@ export default function ScrollRail() {
   const tickFieldRef = useRef<HTMLDivElement>(null);
   const needleRef = useRef<HTMLDivElement>(null);
   const digitRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const heroMarkCloneRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const media = window.matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)');
@@ -43,6 +56,11 @@ export default function ScrollRail() {
     let scrollDirection: 1 | -1 = 1;
     let sectionOffsets: number[] = [];
     let metrics: WordMetrics[] = [];
+    let heroOrigins: HeroCharacterOrigin[] = [];
+    let heroSourceCharacters: HTMLElement[] = [];
+    let heroBrandSource: HTMLElement | null = null;
+    let heroMarkSource: HTMLElement | null = null;
+    let heroMarkOrigin: HeroMarkOrigin | null = null;
     let viewportWidth = window.innerWidth;
     let viewportHeight = window.innerHeight;
     let scrollRange = 1;
@@ -66,6 +84,36 @@ export default function ScrollRail() {
         });
         return { centers, width: cursor || SECTIONS[wordIndex].label.length * 22 };
       });
+      heroSourceCharacters = Array.from(
+        document.querySelectorAll<HTMLElement>('.hero-zackweb-character'),
+      );
+      heroBrandSource = document.querySelector<HTMLElement>('.persistent-logo');
+      heroMarkSource = document.querySelector<HTMLElement>('.persistent-logo-mark');
+      heroOrigins = heroSourceCharacters.map(character => {
+        const rect = character.getBoundingClientRect();
+        const fontSize = Number.parseFloat(window.getComputedStyle(character).fontSize) || 36;
+        return {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+          scale: fontSize / 36,
+        };
+      });
+      if (heroMarkSource) {
+        const rect = heroMarkSource.getBoundingClientRect();
+        heroMarkOrigin = {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+          width: rect.width,
+        };
+      }
+      if (heroBrandSource) {
+        heroBrandSource.style.opacity = '1';
+        heroBrandSource.style.pointerEvents = '';
+      }
+      if (!media.matches || reducedMotion.matches) {
+        heroMarkSource?.style.setProperty('visibility', '');
+        heroSourceCharacters.forEach(character => character.style.removeProperty('visibility'));
+      }
       if (tickFieldRef.current) tickFieldRef.current.style.height = `${scrollRange}px`;
       targetScroll = window.scrollY;
       visualScroll = targetScroll;
@@ -105,7 +153,13 @@ export default function ScrollRail() {
       const topStart = Math.min(250, viewportHeight * 0.32);
       const topEnd = 72;
       const verticalScale = 20 / 34;
-      const heroProgress = clamp(visualScroll / 140);
+      const heroProgress = clamp(visualScroll / 260);
+      if (heroBrandSource) {
+        heroBrandSource.style.opacity = '1';
+        heroBrandSource.style.pointerEvents = !reducedMotion.matches && heroProgress > 0.98
+          ? 'none'
+          : 'auto';
+      }
       const stages = SECTIONS.map((_, index) => {
         const naturalScreenY = sectionOffsets[index] - visualScroll;
         // The final section cannot physically cross the top activation line once
@@ -129,6 +183,46 @@ export default function ScrollRail() {
 
       const incomingIndex = stages.findIndex((stage, index) => index > 0 && stage.detach > 0 && stage.attach < 1);
       const incomingAttach = incomingIndex >= 0 ? stages[incomingIndex].attach : 0;
+
+      const heroWord = metrics[0];
+      const heroCharacterCount = SECTIONS[0].label.length;
+      const heroStagger = Math.min(0.055, 0.3 / heroCharacterCount);
+      const markOrder = heroCharacterCount - 2;
+      const markStart = markOrder * heroStagger * 0.5;
+      const markProgress = ease(clamp((heroProgress - markStart) / 0.78));
+      const markHasDeparted = heroProgress > markStart;
+      const heroMarkClone = heroMarkCloneRef.current;
+
+      if (heroMarkClone && heroMarkOrigin && heroWord) {
+        const thirdCenter = heroWord.centers[2] ?? heroWord.width * (2.5 / heroCharacterCount);
+        const secondCenter = heroWord.centers[1] ?? heroWord.width * (1.5 / heroCharacterCount);
+        const markTargetWidth = ((secondCenter + thirdCenter) / 2) * pastScale * 1.2;
+        const markTargetX = headingRight - heroWord.width * pastScale + markTargetWidth / 2;
+        const markTargetScale = markTargetWidth / Math.max(heroMarkOrigin.width, 1);
+        const markX = bezier(
+          heroMarkOrigin.x,
+          lerp(heroMarkOrigin.x, markTargetX, 0.78),
+          markTargetX,
+          markProgress,
+        );
+        const markY = bezier(
+          heroMarkOrigin.y,
+          Math.max(pastTop, heroMarkOrigin.y - 150),
+          pastTop,
+          markProgress,
+        );
+        const markRotation = Math.sin(markProgress * Math.PI) * -7;
+        const markScale = lerp(1, markTargetScale, markProgress);
+        heroMarkClone.style.width = `${heroMarkOrigin.width}px`;
+        heroMarkClone.style.transform = `translate3d(${markX}px, ${markY}px, 0) translate(-50%, -50%) rotate(${markRotation}deg) scale(${markScale})`;
+        heroMarkClone.style.opacity = reducedMotion.matches || !markHasDeparted
+          ? '0'
+          : String(lerp(1, 0.48, markProgress));
+        heroMarkSource?.style.setProperty(
+          'visibility',
+          !reducedMotion.matches && markHasDeparted ? 'hidden' : 'visible',
+        );
+      }
 
       SECTIONS.forEach((_, sectionIndex) => {
         const word = metrics[sectionIndex];
@@ -167,14 +261,45 @@ export default function ScrollRail() {
           let rotation = 0;
           let scale = compactScale;
           let opacity = 0.48;
+          let color = 'var(--fg)';
+          let fontWeight = 700;
+          let textStroke = '0 transparent';
 
           if (isHeroLabel) {
-            const revealProgress = ease(clamp((heroProgress - reverseOrder * stagger * 0.5) / 0.72));
-            x = pastX + (1 - revealProgress) * (18 + reverseOrder * 2);
-            y = pastY - (1 - revealProgress) * 12;
-            rotation = (1 - revealProgress) * -8;
-            scale = pastScale;
-            opacity = 0.48 * revealProgress;
+            const origin = heroOrigins[characterIndex];
+            // Scrolling down sends the last letter first; reversing the same
+            // stagger naturally restores the hero word from its first letter.
+            const heroOrder = reverseOrder;
+            const moveProgress = ease(clamp(
+              (heroProgress - heroOrder * stagger * 0.5) / 0.78,
+            ));
+            const characterStart = heroOrder * stagger * 0.5;
+            const characterHasDeparted = heroProgress > characterStart;
+            color = `color-mix(in srgb, #101214 ${(1 - moveProgress) * 100}%, var(--fg))`;
+            fontWeight = Math.round(lerp(800, 700, moveProgress));
+            textStroke = `${1 - moveProgress}px #c88d3f`;
+            if (origin) {
+              const sourceY = origin.y;
+              x = bezier(origin.x, lerp(origin.x, pastX, 0.78), pastX, moveProgress);
+              y = bezier(sourceY, Math.max(pastY, sourceY - 150), pastY, moveProgress);
+              rotation = Math.sin(moveProgress * Math.PI) * -7;
+              scale = lerp(origin.scale, pastScale, moveProgress);
+              opacity = characterIndex < 2 || !characterHasDeparted
+                ? 0
+                : lerp(1, 0.48, moveProgress);
+            } else {
+              x = pastX;
+              y = pastY;
+              rotation = 0;
+              scale = pastScale;
+              opacity = 0.48 * moveProgress;
+            }
+            if (characterIndex >= 2) {
+              heroSourceCharacters[characterIndex]?.style.setProperty(
+                'visibility',
+                !reducedMotion.matches && characterHasDeparted ? 'hidden' : 'visible',
+              );
+            }
           } else if (isOutgoing) {
             // Downward: the title folds into the passed stack from its last
             // character. Upward: use the opposite threshold order so the
@@ -186,6 +311,7 @@ export default function ScrollRail() {
             rotation = Math.sin(stackProgress * Math.PI) * -8;
             scale = lerp(1, pastScale, stackProgress);
             opacity = lerp(1, 0.48, stackProgress);
+            color = `color-mix(in srgb, var(--gold) ${(1 - stackProgress) * 100}%, var(--fg))`;
           } else if (isPast) {
             x = pastX;
             y = pastY;
@@ -202,12 +328,14 @@ export default function ScrollRail() {
             rotation = lerp(-90, 0, attachProgress);
             scale = lerp(verticalScale, 1, attachProgress);
             opacity = lerp(0.48, 1, attachProgress);
+            color = `color-mix(in srgb, var(--gold) ${attachProgress * 100}%, var(--fg))`;
           } else if (isActive) {
             x = headingX;
             y = headingY;
             rotation = 0;
             scale = 1;
             opacity = 1;
+            color = 'var(--gold)';
           } else if (stage.attach >= 1) {
             opacity = 0;
           } else if (stage.detach > 0) {
@@ -225,6 +353,9 @@ export default function ScrollRail() {
           if (isActive && !isOutgoing) opacity = 1;
           character.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
           character.style.opacity = String(clamp(opacity));
+          character.style.color = color;
+          character.style.fontWeight = String(fontWeight);
+          character.style.setProperty('-webkit-text-stroke', textStroke);
         });
 
         const hitbox = hitboxRefs.current[sectionIndex];
@@ -292,6 +423,12 @@ export default function ScrollRail() {
       window.removeEventListener('resize', measure);
       media.removeEventListener('change', measure);
       reducedMotion.removeEventListener('change', measure);
+      if (heroBrandSource) {
+        heroBrandSource.style.opacity = '';
+        heroBrandSource.style.pointerEvents = '';
+      }
+      heroMarkSource?.style.removeProperty('visibility');
+      heroSourceCharacters.forEach(character => character.style.removeProperty('visibility'));
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);
@@ -334,6 +471,13 @@ export default function ScrollRail() {
       </div>
 
       <nav className="instrument-characters" aria-label="Page sections">
+        <img
+          className="instrument-hero-mark"
+          src="/assets/zackweb-logo.png"
+          alt=""
+          aria-hidden="true"
+          ref={heroMarkCloneRef}
+        />
         {SECTIONS.map((section, sectionIndex) => (
           <div className="instrument-word" key={section.id}>
             {Array.from(section.label).map((character, characterIndex) => (
