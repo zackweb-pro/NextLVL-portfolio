@@ -3,12 +3,12 @@
 :root {
   --bg:         #f4f1ec;
   --fg:         #111111;
-  --fg-muted:   rgba(17,17,17,0.5);
-  --fg-dim:     rgba(17,17,17,0.28);
+  --fg-muted:   rgba(17,17,17,0.72);
+  --fg-dim:     rgba(17,17,17,0.48);
   --surface:    #111111;
   --surface-fg: #f4f1ec;
-  --border:     rgba(17,17,17,0.12);
-  --border-md:  rgba(17,17,17,0.22);
+  --border:     rgba(17,17,17,0.18);
+  --border-md:  rgba(17,17,17,0.3);
   --stroke:     #111111;
 
   /* Hero-specific backgrounds */
@@ -25,12 +25,12 @@
 [data-theme="dark"] {
   --bg:         #0d0d0d;
   --fg:         #f0ede8;
-  --fg-muted:   rgba(240,237,232,0.5);
-  --fg-dim:     rgba(240,237,232,0.25);
+  --fg-muted:   rgba(240,237,232,0.72);
+  --fg-dim:     rgba(240,237,232,0.48);
   --surface:    #f0ede8;
   --surface-fg: #111111;
-  --border:     rgba(240,237,232,0.1);
-  --border-md:  rgba(240,237,232,0.2);
+  --border:     rgba(240,237,232,0.18);
+  --border-md:  rgba(240,237,232,0.3);
   --stroke:     #f0ede8;
 
   --hero-bg:    #0d0d0d;
