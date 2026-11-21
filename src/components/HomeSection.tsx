@@ -85,7 +85,7 @@ export default function HomeSection({ heroRef }: HomeSectionProps) {
             <figure className="portrait-photo-card">
               <div className="portrait-image-shell">
                 <img
-                  src="/assets/graduated-me.jpeg"
+                  src="/assets/IMG_4640.JPG"
                   alt="Zakaria Oumghar wearing his graduation gown"
                   className="portrait-img"
                 />

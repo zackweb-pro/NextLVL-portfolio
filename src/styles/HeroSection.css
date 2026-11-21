@@ -1593,8 +1593,8 @@
   border-bottom: 1px solid var(--border);
 }
 .experience-item.is-latest {
-  border-left: 3px solid #b08a58;
-  background: color-mix(in srgb, var(--bg) 92%, #b08a58 8%);
+  border-left: 1px solid color-mix(in srgb, #b08a58 50%, transparent);
+  background: transparent;
 }
 .experience-item.is-latest .experience-summary {
   padding-right: 18px;
